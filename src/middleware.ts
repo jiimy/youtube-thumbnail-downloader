@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { createServerClient } from "@supabase/ssr";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -33,61 +32,6 @@ export async function middleware(request: NextRequest) {
       },
     });
 
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          getAll() {
-            return request.cookies.getAll();
-          },
-          setAll(cookiesToSet) {
-            cookiesToSet.forEach(({ name, value }) =>
-              request.cookies.set(name, value)
-            );
-            response = NextResponse.next({
-              request,
-            });
-            cookiesToSet.forEach(({ name, value, options }) =>
-              response.cookies.set(name, value, options)
-            );
-          },
-        },
-      }
-    );
-
-    // This will refresh session if expired - required for Server Components
-    // https://supabase.com/docs/guides/auth/server-side/nextjs
-    const user = await supabase.auth.getUser();
-
-    // console.log("request", request.nextUrl.pathname);
-    // console.log("user", user);
-    // protected routes
-    if (
-      request.nextUrl.pathname.startsWith("/mypage") &&
-      user?.data?.user === null
-    ) {
-      return NextResponse.redirect(new URL("/login", request.url));
-    }
-    if (
-      request.nextUrl.pathname.startsWith("/bookmark") &&
-      user?.data?.user === null
-    ) {
-      return NextResponse.redirect(new URL("/login", request.url));
-    }
-    if (
-      request.nextUrl.pathname.startsWith("/upload") &&
-      user?.data?.user === null
-    ) {
-      return NextResponse.redirect(new URL("/login", request.url));
-    }
-    if (
-      request.nextUrl.pathname.startsWith("/support") &&
-      user?.data?.user === null
-    ) {
-      return NextResponse.redirect(new URL("/login", request.url));
-    }
-
     return response;
   } catch (e) {
     // If you are here, a Supabase client could not be created!
@@ -104,9 +48,9 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     "/api/:path*",
-    "/mypage/:path*",
-    "/bookmark/:path*",
-    "/upload/:path*",
-    "/support/:path*",
+    // "/mypage/:path*",
+    // "/bookmark/:path*",
+    // "/upload/:path*",
+    // "/support/:path*",
   ],
 };

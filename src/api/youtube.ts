@@ -1,26 +1,13 @@
 import axios from "axios";
 
-// 유튜브 스크립트 추출
-// 시작 (start) 부터 몇개까지 보여줄지 (end)
-export async function fetchTranscript(id: string) {
-  try {
-    const response = await axios.get(`/api/youtube?videoId=${id}`);
-
-    if (response?.data?.transcript) {
-      const transcript = response?.data?.transcript;
-      return transcript;
-    }
-  } catch (err) {
-    console.error("스크립트 추출 실패", err);
-  }
-}
-
 // 유튜브 info
 export async function youtubeInfoApi(id: string) {
-  const url = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails,snippet,statistics&id=${id}&key=${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}`;
 
+  const url = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails,snippet,statistics&id=${id}&key=${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}`;
+  console.log('id: ', id);
   try {
     const response = await axios.get(url);
+    console.log('response', response);
     if (response.data.items.length > 0) {
       return response.data.items[0];
     } else {

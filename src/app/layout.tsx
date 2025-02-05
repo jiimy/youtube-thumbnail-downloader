@@ -1,6 +1,7 @@
 import './layout.scss';
 import './globals.css'
 import Head from './head'
+import QueryProviders from '@/provider/queryProvider';
 import Script from 'next/script';
 
 export default function RootLayout({
@@ -12,7 +13,9 @@ export default function RootLayout({
     <html lang="ko">
       <Head />
       <body>
-        {children}
+        <QueryProviders>
+          {children}
+        </QueryProviders>
         <div id="modal" />
       </body>
     </html>
