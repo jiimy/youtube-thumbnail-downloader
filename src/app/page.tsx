@@ -8,6 +8,7 @@ import { useGetYoutubeInfoLink } from "@/hooks/useGetYoutubeInfo";
 import Image from "next/image";
 import s from './page.module.scss';
 import axios from "axios";
+import searchIcon from '/public/image/search.svg';
 
 export default function Home() {
   const [text, setText] = useState<string>("");
@@ -40,25 +41,6 @@ export default function Home() {
     }
   };
 
-  const handleDownload = async (url: string, key: string) => {
-    try {
-      // 이미지 URL을 fetch하여 Blob 객체로 변환
-      const response = await fetch(url);
-      const blob = await response.blob();
-      const link = document.createElement('a');
-
-      // Blob URL을 다운로드 링크로 설정
-      link.href = URL.createObjectURL(blob);
-      link.download = `${key}.jpg`; // 다운로드 시 파일명 설정
-      link.click();
-
-      // Blob URL 해제
-      URL.revokeObjectURL(link.href);
-    } catch (error) {
-      console.error("이미지 다운로드 실패", error);
-    }
-  };
-
   return (
     <div className={s.page}>
       <div className={s.input_wrap}>
@@ -72,7 +54,9 @@ export default function Home() {
           onChange={onchange}
           onKeyDown={handleKeyDown}
         />
-        <button onClick={onEnter}>검색</button>
+        <button onClick={onEnter}>
+          <Image src={searchIcon} alt={'검색'} width={36} height={36} />
+        </button>
       </div>
 
       <div className="relative">
@@ -83,7 +67,7 @@ export default function Home() {
             {youtubeInfo && (
               <div>
                 <div className={s.title}>
-                <h1>{youtubeInfo.snippet?.title} - {youtubeInfo.snippet?.channelTitle}</h1>
+                  <h1>{youtubeInfo.snippet?.title} - {youtubeInfo.snippet?.channelTitle}</h1>
                 </div>
                 {/* <p>Playtime: {youtubeInfo.contentDetails?.duration}</p> */}
                 {Object.entries(youtubeInfo?.snippet?.thumbnails).map(([key, value]) => {
