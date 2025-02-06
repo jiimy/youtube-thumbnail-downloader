@@ -2,12 +2,11 @@ import axios from "axios";
 
 // 유튜브 info
 export async function youtubeInfoApi(id: string) {
-
   const url = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails,snippet,statistics&id=${id}&key=${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}`;
-  console.log('id: ', id);
+  console.log("id: ", id);
   try {
     const response = await axios.get(url);
-    console.log('response', response);
+    console.log("response", response);
     if (response.data.items.length > 0) {
       return response.data.items[0];
     } else {
@@ -70,5 +69,29 @@ export async function myYoutubeUplaodApi() {
   } catch (error) {
     console.error("Error fetching feed data:", error);
     return [];
+  }
+}
+
+// 외부 파일 다운로드
+export async function downloadApi(url: string, key: string) {
+  console.log("url", url);
+  try {
+    // 서버에서 이미지를 받아오기
+    const response = await axios.get(
+      `/api/?url=${encodeURIComponent(url)}&key=${key}`,
+      {
+        responseType: "blob"
+      }
+    );
+
+    const blob = response.data;
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `${key}-size.jpg`; // 다운로드할 파일명
+    link.click();
+    URL.revokeObjectURL(link.href);
+  } catch (error) {
+    console.error("이미지 다운로드 실패:", error);
+    alert("이미지 다운로드에 실패했습니다.");
   }
 }
