@@ -58,27 +58,13 @@ export async function fetchVideoInfo(id: string) {
 //   return null;
 // }
 
-// 내가 업로드한 유튜브 정보
-export async function myYoutubeUplaodApi() {
-  try {
-    const res = await axios.get("/api/youtube/user");
-
-    if (res.status === 200) {
-      return res.data.data;
-    }
-  } catch (error) {
-    console.error("Error fetching feed data:", error);
-    return [];
-  }
-}
-
 // 외부 파일 다운로드
 export async function downloadApi(url: string, key: string) {
   console.log("url", url);
   try {
     // 서버에서 이미지를 받아오기
     const response = await axios.get(
-      `/api/?url=${encodeURIComponent(url)}&key=${key}`,
+      `/api/thumbnail/?url=${encodeURIComponent(url)}&key=${key}`,
       {
         responseType: "blob"
       }

@@ -14,18 +14,27 @@ export default function Home() {
   const [text, setText] = useState<string>("");
   const [link, setLink] = useState<string>("");
   const [shouldFetch, setShouldFetch] = useState<boolean>(false);
+  // 유튜브 목록 검색
+  const [text1, setText1] = useState('');
 
-  // const { thumbNail, title, channelTitle } = useGetYoutubeInfoLink(link);
 
   const { data: youtubeInfo, isLoading: youtubeInfoLoading } = useQuery({
     queryFn: () => youtubeInfoApi(link),
     queryKey: ["youtubeLink", link],
     enabled: Boolean(link) && shouldFetch
   });
+  const { data: youtubeList, isLoading: youtubeListLoading } = useQuery({
+    queryFn: () => axios.get(`/api/search/?search=${text1}`),
+    queryKey: ['youtubeList', text1],
+    enabled: Boolean(text1) && shouldFetch
+  })
 
   const onchange = (e: any) => {
     setText(e.target.value);
   };
+  const onChange1 = (e: any) => {
+    setText1(e.target.value);
+  }
 
   const onEnter = () => {
     if (text) {
@@ -34,6 +43,11 @@ export default function Home() {
       setShouldFetch(true);
     }
   };
+  const onEnter1 = () => {
+    if (text1) {
+      setShouldFetch(true);
+    }
+  }
 
   const handleKeyDown = (e: any) => {
     if (e.key === "Enter") {
@@ -55,6 +69,22 @@ export default function Home() {
           onKeyDown={handleKeyDown}
         />
         <button onClick={onEnter}>
+          <Image src={searchIcon} alt={'검색'} width={36} height={36} />
+        </button>
+      </div>
+
+      <div className={s.input_wrap}>
+        <input
+          type="text"
+          name=""
+          id=""
+          className={s.input}
+          placeholder="검색"
+          value={text1}
+          onChange={onChange1}
+        // onKeyDown={handleKeyDown}
+        />
+        <button onClick={onEnter1}>
           <Image src={searchIcon} alt={'검색'} width={36} height={36} />
         </button>
       </div>
