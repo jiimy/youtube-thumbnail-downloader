@@ -9,6 +9,7 @@ import Image from "next/image";
 import s from './page.module.scss';
 import axios from "axios";
 import searchIcon from '/public/image/search.svg';
+import List from "@/components/List/List";
 
 export default function Home() {
   const [text, setText] = useState<string>("");
@@ -18,15 +19,18 @@ export default function Home() {
   const [text1, setText1] = useState('');
 
 
+  // 유튜브 썸네[일 검색 api
   const { data: youtubeInfo, isLoading: youtubeInfoLoading } = useQuery({
     queryFn: () => youtubeInfoApi(link),
     queryKey: ["youtubeLink", link],
-    enabled: Boolean(link) && shouldFetch
+    enabled: link !== '' && shouldFetch
   });
+
+  // 유튜브 검색 api
   const { data: youtubeList, isLoading: youtubeListLoading } = useQuery({
-    queryFn: () => axios.get(`/api/search/?search=${text1}`),
-    queryKey: ['youtubeList', text1],
-    enabled: Boolean(text1) && shouldFetch
+    queryFn: () => axios.get(`/api/search/?search=${text}`),
+    queryKey: ['youtubeList', text],
+    enabled: link == '' && shouldFetch
   })
 
   const onchange = (e: any) => {
@@ -38,16 +42,16 @@ export default function Home() {
 
   const onEnter = () => {
     if (text) {
-      const value = text.split('=')[1];
-      setLink(value);
+      // 유튜브 썸네일 검색일때. 
+      if (text.includes('youtube')) {
+        const value = text.split('=')[1];
+        setLink(value);
+      }
       setShouldFetch(true);
     }
   };
-  const onEnter1 = () => {
-    if (text1) {
-      setShouldFetch(true);
-    }
-  }
+
+  console.log('목록: ', youtubeList);
 
   const handleKeyDown = (e: any) => {
     if (e.key === "Enter") {
@@ -63,7 +67,7 @@ export default function Home() {
           name=""
           id=""
           className={s.input}
-          placeholder="링크 입력"
+          placeholder="유튜브 링크 및 검색어 입력"
           value={text}
           onChange={onchange}
           onKeyDown={handleKeyDown}
@@ -73,49 +77,28 @@ export default function Home() {
         </button>
       </div>
 
-      <div className={s.input_wrap}>
-        <input
-          type="text"
-          name=""
-          id=""
-          className={s.input}
-          placeholder="검색"
-          value={text1}
-          onChange={onChange1}
-        // onKeyDown={handleKeyDown}
-        />
-        <button onClick={onEnter1}>
-          <Image src={searchIcon} alt={'검색'} width={36} height={36} />
-        </button>
-      </div>
 
+      {/* 썸네일 목록 */}
       <div className="relative">
         {youtubeInfoLoading ? (
           <Loading />
         ) : (
           <div>
             {youtubeInfo && (
+              <List searchTheme="thumbnail" data={youtubeInfo} />
+            )}
+          </div>
+        )}
+      </div>
+      {/* 영상 검색 목록 */}
+      <div className="relative">
+        {youtubeInfoLoading ? (
+          <Loading />
+        ) : (
+          <div>
+            {youtubeList && (
               <div>
-                <div className={s.title}>
-                  <h1>{youtubeInfo.snippet?.title} - {youtubeInfo.snippet?.channelTitle}</h1>
-                </div>
-                {/* <p>Playtime: {youtubeInfo.contentDetails?.duration}</p> */}
-                {Object.entries(youtubeInfo?.snippet?.thumbnails).map(([key, value]) => {
-                  const thumbnail = value as { url: string; width: number; height: number };
-                  return (
-                    <div key={key} className="mb-12">
-                      <div className="flex gap-16">
-                        <div className={s.img_wrap}>
-                          <Image src={thumbnail.url} alt={key} width={thumbnail.width} height={thumbnail.height} />
-                        </div>
-                        <div className="text-left">
-                          <p> {thumbnail.width} * {thumbnail.height} {key}</p>
-                          <button className={s.download_btn} onClick={() => downloadApi(thumbnail.url, key)}>다운로드 받기</button>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
+                영상 목록 보여주기
               </div>
             )}
           </div>
