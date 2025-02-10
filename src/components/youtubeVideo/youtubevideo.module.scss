@@ -1,0 +1,39 @@
+.youtube_wrap {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%;
+  margin-top: 4px;
+  .time {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    padding: 3px 6px;
+    color: white;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 6px;
+    z-index: 1;
+  }
+}
+
+.youtube_thumbnail {
+  position: relative;
+  cursor: pointer;
+  padding-bottom: 56.25%;
+
+  // 옵션
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.ko {
+  margin-top: 12px;
+}
+.main {
+  display: none;
+}
+.is_viewing {
+  background: #f0f0f0;
+
+  display: block;
+}

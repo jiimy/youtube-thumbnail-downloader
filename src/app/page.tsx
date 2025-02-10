@@ -14,20 +14,21 @@ import List from "@/components/List/List";
 export default function Home() {
   const [text, setText] = useState<string>("");
   const [link, setLink] = useState<string>("");
+  const [searchType, setSearchType] = useState<'video' | 'thumbnail'>('video');
   const [shouldFetch, setShouldFetch] = useState<boolean>(false);
   // 유튜브 목록 검색
   const [text1, setText1] = useState('');
 
 
   // 유튜브 썸네[일 검색 api
-  const { data: youtubeInfo, isLoading: youtubeInfoLoading } = useQuery({
+  const { data: youtubeInfo, isSuccess: thumbnailSuccess, isLoading: youtubeInfoLoading } = useQuery({
     queryFn: () => youtubeInfoApi(link),
     queryKey: ["youtubeLink", link],
     enabled: link !== '' && shouldFetch
   });
 
   // 유튜브 검색 api
-  const { data: youtubeList, isLoading: youtubeListLoading } = useQuery({
+  const { data: youtubeList, isSuccess: listSuccess, isLoading: youtubeListLoading } = useQuery({
     queryFn: () => axios.get(`/api/search/?search=${text}`),
     queryKey: ['youtubeList', text],
     enabled: link == '' && shouldFetch
@@ -36,28 +37,32 @@ export default function Home() {
   const onchange = (e: any) => {
     setText(e.target.value);
   };
-  const onChange1 = (e: any) => {
-    setText1(e.target.value);
-  }
 
   const onEnter = () => {
+    console.log('엔터 누름');
     if (text) {
       // 유튜브 썸네일 검색일때. 
       if (text.includes('youtube')) {
+        setSearchType('thumbnail');
         const value = text.split('=')[1];
         setLink(value);
       }
       setShouldFetch(true);
+      setSearchType('video');
     }
   };
-
-  console.log('목록: ', youtubeList);
 
   const handleKeyDown = (e: any) => {
     if (e.key === "Enter") {
       onEnter();
     }
   };
+
+  // useEffect(() => {
+  //   if (thumbnailSuccess || listSuccess) {
+  //     setText('');
+  //   }
+  // }, [thumbnailSuccess, listSuccess]);
 
   return (
     <div className={s.page}>
@@ -77,29 +82,13 @@ export default function Home() {
         </button>
       </div>
 
-
-      {/* 썸네일 목록 */}
-      <div className="relative">
-        {youtubeInfoLoading ? (
+      <div className="relative min-h-800">
+        {(youtubeInfoLoading || youtubeListLoading) ? (
           <Loading />
         ) : (
           <div>
-            {youtubeInfo && (
-              <List searchTheme="thumbnail" data={youtubeInfo} />
-            )}
-          </div>
-        )}
-      </div>
-      {/* 영상 검색 목록 */}
-      <div className="relative">
-        {youtubeInfoLoading ? (
-          <Loading />
-        ) : (
-          <div>
-            {youtubeList && (
-              <div>
-                영상 목록 보여주기
-              </div>
+            {(youtubeInfo || youtubeList) && (
+              <List searchTheme={searchType} data={youtubeInfo || youtubeList?.data} />
             )}
           </div>
         )}

@@ -5,7 +5,6 @@ const YOUTUBE_API_URL = "https://www.googleapis.com/youtube/v3/search";
 
 export async function GET(request: NextRequest) {
   const search = request.nextUrl.searchParams.get("search");
-  console.log("ss", search);
 
   if (!search) {
     return NextResponse.json(
@@ -20,11 +19,10 @@ export async function GET(request: NextRequest) {
         part: "snippet",
         maxResults: 10,
         q: search,
+        order: "date",
         key: `${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}`,
       },
     });
-
-    console.log('res', response.data.items);
 
     return NextResponse.json(response.data.items);
   } catch (error) {
