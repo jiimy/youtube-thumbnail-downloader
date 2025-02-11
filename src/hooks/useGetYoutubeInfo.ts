@@ -2,7 +2,6 @@ import { youtubeInfoApi } from "@/api/youtube";
 import { useQuery } from "@tanstack/react-query";
 
 export function useGetYoutubeInfoLink(Link: string) {
-  console.log('use LInke', Link);
   const { data: youtubeInfo, isLoading: youtubeInfoLoading } = useQuery({
     queryFn: () => youtubeInfoApi(Link),
     queryKey: ["youtubeLink", Link],

@@ -3,6 +3,7 @@ import './globals.css'
 import Head from './head'
 import QueryProviders from '@/provider/queryProvider';
 import Script from 'next/script';
+import Search from '@/components/search/Search';
 
 export default function RootLayout({
   children
@@ -14,7 +15,10 @@ export default function RootLayout({
       <Head />
       <body>
         <QueryProviders>
-          {children}
+          <div className="page">
+            <Search />
+            {children}
+          </div>
         </QueryProviders>
         <div id="modal" />
       </body>

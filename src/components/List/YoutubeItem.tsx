@@ -21,7 +21,8 @@ const YoutubeItem = ({ link }: YoutubeItemProps) => {
         <YoutubeVideo videoId={link} onTimeUpdate={handleTimeUpdate} />
       </div>
       {link !== undefined &&
-        <Link href={`/thumbnail/${link}`}>썸네일 다운로드</Link>
+        // <Link href={`/thumbnail/${link}`}>썸네일 다운로드</Link>
+        <Link href={`/search?type=thumbnail&search=${link}`}>썸네일 다운로드</Link>
       }
     </div>
   );
