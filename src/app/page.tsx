@@ -41,8 +41,8 @@ export default function Home() {
   //   }
   // ]);
   const [
-    { data: youtubeList, isSuccess: youtubeListSuccess, isLoading: youtubeListLoading },
-    { data: youtubeProfile, isSuccess: youtubeProfileSuccess, isLoading: youtubeProfileLoading }
+    { data: youtubeList, isSuccess: youtubeListS, isLoading: youtubeListLoading },
+    { data: youtubeProfile, isSuccess: youtubeProfileS, isLoading: youtubeProfileLoading }
   ] = useQueries({
     queries: [
       { queryKey: ["youtubeList", text], queryFn: () => axios.get(`/api/search/?search=${text}`) },
@@ -104,7 +104,7 @@ export default function Home() {
         ) : (
           <div>
             {(youtubeInfo || youtubeList) && (
-              <List searchTheme={searchType} data={youtubeInfo || youtubeList?.data} />
+              <List searchTheme={searchType} data={youtubeInfo || (youtubeList?.data && youtubeProfile?.data)} />
             )}
           </div>
         )}
