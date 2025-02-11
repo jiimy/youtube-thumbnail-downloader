@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQueries, useQuery } from "@tanstack/react-query";
 import Loading from "@/components/loading/Loading";
 import dynamic from "next/dynamic";
 import { downloadApi, youtubeInfoApi } from "@/api/youtube";
@@ -27,12 +27,28 @@ export default function Home() {
     enabled: link !== '' && shouldFetch
   });
 
-  // 유튜브 검색 api
-  const { data: youtubeList, isSuccess: listSuccess, isLoading: youtubeListLoading } = useQuery({
-    queryFn: () => axios.get(`/api/search/?search=${text}`),
-    queryKey: ['youtubeList', text],
-    enabled: link == '' && shouldFetch
-  })
+  // 유튜브 검색 api - 동영상 목록만 나오게
+  //   const { data: youtubeData, isSuccess: youtubeListSuccess, isLoading: youtubeListLoading } = useQueries([
+  //   {
+  //     queryKey: ['youtubeList', text],
+  //     queryFn: () => axios.get(`/api/search/?search=${text}`),
+  //     enabled: link === '' && shouldFetch
+  //   },
+  //   {
+  //     queryKey: ['youtubeProfile', text],
+  //     queryFn: () => axios.get(`/api/search/profile/?search=${text}`),
+  //     enabled: link === '' && shouldFetch
+  //   }
+  // ]);
+  const [
+    { data: youtubeList, isSuccess: youtubeListSuccess, isLoading: youtubeListLoading },
+    { data: youtubeProfile, isSuccess: youtubeProfileSuccess, isLoading: youtubeProfileLoading }
+  ] = useQueries({
+    queries: [
+      { queryKey: ["youtubeList", text], queryFn: () => axios.get(`/api/search/?search=${text}`) },
+      { queryKey: ["youtubeProfile", text], queryFn: () => axios.get(`/api/search/profile/?search=${text}`) },
+    ],
+  });
 
   const onchange = (e: any) => {
     setText(e.target.value);
