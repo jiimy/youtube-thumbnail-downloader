@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from "react";
-import { useQueries, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import Loading from "@/components/loading/Loading";
 import dynamic from "next/dynamic";
 import { downloadApi, youtubeInfoApi } from "@/api/youtube";
@@ -24,31 +24,21 @@ export default function Home() {
   const { data: youtubeInfo, isSuccess: thumbnailSuccess, isLoading: youtubeInfoLoading } = useQuery({
     queryFn: () => youtubeInfoApi(link),
     queryKey: ["youtubeLink", link],
-    enabled: link !== '' && shouldFetch
+    enabled: link !== '' && shouldFetch && searchType === 'thumbnail'
   });
 
-  // 유튜브 검색 api - 동영상 목록만 나오게
-  //   const { data: youtubeData, isSuccess: youtubeListSuccess, isLoading: youtubeListLoading } = useQueries([
-  //   {
-  //     queryKey: ['youtubeList', text],
-  //     queryFn: () => axios.get(`/api/search/?search=${text}`),
-  //     enabled: link === '' && shouldFetch
-  //   },
-  //   {
-  //     queryKey: ['youtubeProfile', text],
-  //     queryFn: () => axios.get(`/api/search/profile/?search=${text}`),
-  //     enabled: link === '' && shouldFetch
-  //   }
-  // ]);
-  const [
-    { data: youtubeList, isSuccess: youtubeListS, isLoading: youtubeListLoading },
-    { data: youtubeProfile, isSuccess: youtubeProfileS, isLoading: youtubeProfileLoading }
-  ] = useQueries({
-    queries: [
-      { queryKey: ["youtubeList", text], queryFn: () => axios.get(`/api/search/?search=${text}`) },
-      { queryKey: ["youtubeProfile", text], queryFn: () => axios.get(`/api/search/profile/?search=${text}`) },
-    ],
-  });
+  // 유튜브 검색 api
+  const { data: youtubeList, isSuccess: listSuccess, isLoading: youtubeListLoading } = useQuery({
+    queryFn: () => axios.get(`/api/search/?search=${text}`),
+    queryKey: ['youtubeList', text],
+    enabled: link === '' && shouldFetch && searchType === 'video'
+  })
+
+  const { data: youtubeProfile, isSuccess: youtubeProfileS, isLoading: youtubeProfileLoading } = useQuery({
+    queryFn: () => axios.get(`/api/search/profile/?search=${text}`),
+    queryKey: ['youtubeProfile', text],
+    enabled: link === '' && shouldFetch && searchType === 'video'
+  })
 
   const onchange = (e: any) => {
     setText(e.target.value);
@@ -62,9 +52,10 @@ export default function Home() {
         setSearchType('thumbnail');
         const value = text.split('=')[1];
         setLink(value);
+      } else {
+        setSearchType('video');
       }
       setShouldFetch(true);
-      setSearchType('video');
     }
   };
 
@@ -73,6 +64,9 @@ export default function Home() {
       onEnter();
     }
   };
+
+  console.log('youtubeProfileLoading', youtubeProfileLoading);
+  console.log('youtubeListLoading', youtubeListLoading);
 
   // useEffect(() => {
   //   if (thumbnailSuccess || listSuccess) {
@@ -99,12 +93,15 @@ export default function Home() {
       </div>
 
       <div className="relative min-h-800">
-        {(youtubeInfoLoading || youtubeListLoading) ? (
+        {(youtubeInfoLoading || youtubeListLoading || youtubeProfileLoading) ? (
           <Loading />
         ) : (
           <div>
-            {(youtubeInfo || youtubeList) && (
-              <List searchTheme={searchType} data={youtubeInfo || (youtubeList?.data && youtubeProfile?.data)} />
+            {(youtubeInfo || youtubeList || youtubeProfile) && (
+              <>
+                <List searchTheme={searchType} data={youtubeProfile?.data} uiType="profile"/>
+                  <List searchTheme={searchType} data={youtubeInfo || youtubeList?.data} uiType="list" />
+              </>
             )}
           </div>
         )}

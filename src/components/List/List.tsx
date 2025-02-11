@@ -7,28 +7,31 @@ import YoutubeItem from './YoutubeItem';
 
 type ListProps = {
   searchTheme: 'video' | 'thumbnail',
+  uiType?: 'profile' | 'list',
   data: any
 }
 
-const List = ({ searchTheme, data }: ListProps) => {
+const List = ({ searchTheme, data, uiType = 'list' }: ListProps) => {
   console.log('data', searchTheme == 'video' && data)
   return (
     <div>
       {searchTheme === 'video' &&
         <div>
-          <div className={s.title}>
-            <div className={s.img_wrap}>
-              <Image
-                src={data[0]?.snippet?.thumbnails?.high?.url}
-                alt="thumbnail"
-                width={160}
-                height={160}
-              />
+          {uiType === 'profile' &&
+            <div className={s.title}>
+              <div className={s.img_wrap}>
+                <Image
+                  src={data[0]?.snippet?.thumbnails?.high?.url}
+                  alt="thumbnail"
+                  width={160}
+                  height={160}
+                />
+              </div>
+              <span>
+                {data[0]?.snippet?.channelTitle}
+              </span>
             </div>
-            <span>
-              {data[0]?.snippet?.channelTitle}
-            </span>
-          </div>
+          }
           {data?.map((item: any, i: number) => {
             if (item?.id?.videoId !== undefined) {
               return <YoutubeItem link={item?.id?.videoId} key={i} />

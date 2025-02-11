@@ -3,10 +3,8 @@ import axios from "axios";
 // 유튜브 info
 export async function youtubeInfoApi(id: string) {
   const url = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails,snippet,statistics&id=${id}&key=${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}`;
-  console.log("id: ", id);
   try {
     const response = await axios.get(url);
-    console.log("response", response);
     if (response.data.items.length > 0) {
       return response.data.items[0];
     } else {

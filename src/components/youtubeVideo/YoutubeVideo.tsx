@@ -12,8 +12,6 @@ const YoutubeVideo = ({ videoId, onTimeUpdate }: { videoId: string; onTimeUpdate
   const playerRef = useRef<any>(null);
   const { playTime } = useGetYoutubeInfoLink(videoId);
 
-  console.log('비디오 아이디', videoId);
-
   const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
   const videoOptions = {
     width: '100%',
