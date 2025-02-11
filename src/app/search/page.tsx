@@ -2,10 +2,9 @@
 
 import { youtubeInfoApi } from '@/api/youtube';
 import List from '@/components/List/List';
-import Loading from '@/components/loading/Loading';
 import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const Search = () => {
   const params = useSearchParams();
@@ -40,9 +39,7 @@ const Search = () => {
 
   return (
     <>
-      <Suspense fallback={<Loading />}>
         <List searchTheme={searchType} data={youtubeInfo} uiType="list" />
-      </Suspense>
     </>
   );
 };
