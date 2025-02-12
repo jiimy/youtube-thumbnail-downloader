@@ -22,17 +22,17 @@ const Search = () => {
   const [shouldFetch, setShouldFetch] = useState<boolean>(false);
 
   // 유튜브 검색 api
-  const { data: youtubeList, isSuccess: listSuccess, isLoading: youtubeListLoading } = useQuery({
-    queryFn: () => axios.get(`/api/search/?search=${text}`),
-    queryKey: ['youtubeList', text],
-    enabled: link === '' && shouldFetch && searchType === 'video'
-  })
+  // const { data: youtubeList, isSuccess: listSuccess, isLoading: youtubeListLoading } = useQuery({
+  //   queryFn: () => axios.get(`/api/search/?search=${text}`),
+  //   queryKey: ['youtubeList', text],
+  //   enabled: link === '' && shouldFetch && searchType === 'video'
+  // })
 
-  const { data: youtubeProfile, isSuccess: youtubeProfileS, isLoading: youtubeProfileLoading } = useQuery({
-    queryFn: () => axios.get(`/api/search/profile/?search=${text}`),
-    queryKey: ['youtubeProfile', text],
-    enabled: link === '' && shouldFetch && searchType === 'video'
-  })
+  // const { data: youtubeProfile, isSuccess: youtubeProfileS, isLoading: youtubeProfileLoading } = useQuery({
+  //   queryFn: () => axios.get(`/api/search/profile/?search=${text}`),
+  //   queryKey: ['youtubeProfile', text],
+  //   enabled: link === '' && shouldFetch && searchType === 'video'
+  // })
 
   const onchange = (e: any) => {
     setText(e.target.value);
@@ -43,22 +43,23 @@ const Search = () => {
     if (text) {
       // 유튜브 썸네일 검색일때. 
       if (text.includes('youtu.be')) {
-        setSearchType('thumbnail');
+        // setSearchType('thumbnail');
         const value = text.split('youtu.be/')[1].split('?si')[0];
-        setLink(value);
+        // setLink(value);
+        console.log('value', value);
         router.push(`/search?type=thumbnail&search=${value}`);
       }
       // 유튜브 썸네일 검색일때. 
-      if (text.includes('youtube')) {
-        setSearchType('thumbnail');
+      else if (text.includes('youtube')) {
+        // setSearchType('thumbnail');
         const value = text.split('watch?v=')[1];
-        setLink(value);
+        // setLink(value);
         router.push(`/search?type=thumbnail&search=${value}`);
       } else {
-        router.push(`/search?type=youtube&search=${text}`);
+        router.push(`/search?type=video&search=${text}`);
         setSearchType('video');
       }
-      setShouldFetch(true);
+      // setShouldFetch(true);
     }
   };
 

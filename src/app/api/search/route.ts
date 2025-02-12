@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
         key: `${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}`,
       },
     });
-
+    console.log('res :', response);
     return NextResponse.json(response.data.items);
   } catch (error) {
     console.error("YouTube API 호출 오류:", error);

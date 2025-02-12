@@ -2,7 +2,10 @@ import axios from "axios";
 
 // 유튜브 info
 export async function youtubeInfoApi(id: string) {
+  console.log('api :::: ', id);
   const url = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails,snippet,statistics&id=${id}&key=${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}`;
+
+  console.log('url:::', url);
   try {
     const response = await axios.get(url);
     if (response.data.items.length > 0) {
@@ -56,6 +59,34 @@ export async function fetchVideoInfo(id: string) {
 //   return null;
 // }
 
+// 유튜브 검색 api
+export async function youtubeSearchApi(query: string) {
+  console.log("query:", query);
+  const te1 = '형독';
+  try {
+    const res = await axios.get(`/api/search/?search=${te1}`);
+    if (res.status === 200) {
+      console.log('api', query, res);
+      return res?.data;
+    }
+  } catch (err) {
+    console.error("유튜브 검색 실패", err);
+  }
+}
+// 유튜브 프로필 검색 api
+export async function youtubeSearchProfileApi(query: string) {
+  console.log('profile', query);
+
+  try {
+    const res = await axios.get(`/api/search/profile/?search=${query}`);
+    if (res.status === 200) {
+      return res?.data;
+    }
+  } catch (err) {
+    console.error("유튜브 검색 실패", err);
+  }
+}
+
 // 외부 파일 다운로드
 export async function downloadApi(url: string, key: string) {
   console.log("url", url);
@@ -64,7 +95,7 @@ export async function downloadApi(url: string, key: string) {
     const response = await axios.get(
       `/api/thumbnail/?url=${encodeURIComponent(url)}&key=${key}`,
       {
-        responseType: "blob"
+        responseType: "blob",
       }
     );
 
@@ -80,15 +111,18 @@ export async function downloadApi(url: string, key: string) {
   }
 }
 
-// 여러개 한번에 
+// 여러개 한번에
 export async function downloadMultiApi(urls: string[], keys: string[]) {
   console.log("urls", urls);
   try {
     // 각 URL에 대한 axios 요청을 생성
     const requests = urls.map((url, index) =>
-      axios.get(`/api/thumbnail/?url=${encodeURIComponent(url)}&key=${keys[index]}`, {
-        responseType: "blob"
-      })
+      axios.get(
+        `/api/thumbnail/?url=${encodeURIComponent(url)}&key=${keys[index]}`,
+        {
+          responseType: "blob",
+        }
+      )
     );
 
     // 모든 요청을 병렬로 처리

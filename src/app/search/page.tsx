@@ -1,6 +1,6 @@
 'use client';
 
-import { youtubeInfoApi } from '@/api/youtube';
+import { youtubeInfoApi, youtubeSearchApi, youtubeSearchProfileApi } from '@/api/youtube';
 import List from '@/components/List/List';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
@@ -20,10 +20,10 @@ const Search = () => {
   useEffect(() => {
     if (type === 'thumbnail') {
       setSearchType('thumbnail');
-      setLink(search as string);
     } else {
       setSearchType('video');
     }
+    setLink(search as string);
     setShouldFetch(true);
   }, [type, search]);
 
@@ -36,30 +36,30 @@ const Search = () => {
 
   // 유튜브 검색 api
   const { data: youtubeList, isSuccess: listSuccess, isLoading: youtubeListLoading } = useQuery({
-    queryFn: () => axios.get(`/api/search/?search=${link}`),
+    queryFn: () => youtubeSearchApi(link),
     queryKey: ['youtubeList', link],
     enabled: type === 'video' && search !== ''
   })
 
-  const { data: youtubeProfile, isSuccess: youtubeProfileS, isLoading: youtubeProfileLoading } = useQuery({
-    queryFn: () => axios.get(`/api/search/profile/?search=${link}`),
-    queryKey: ['youtubeProfile', link],
-    enabled: type === 'video' && search !== ''
-  })
+  // const { data: youtubeProfile, isSuccess: youtubeProfileS, isLoading: youtubeProfileLoading } = useQuery({
+  //   queryFn: () => youtubeSearchProfileApi(link),
+  //   queryKey: ['youtubeProfile', link],
+  //   enabled: type === 'video' && search !== ''
+  // })
 
-  console.log('dd', searchType);
+  console.log('dd', link);
   // console.log('dd', type, search);
   // console.log('dd', link);
 
   return (
     <>
-      {youtubeInfo &&
+      {/* {youtubeInfo &&
         <List searchTheme={searchType} data={youtubeInfo} uiType="list" />
       }
       {youtubeList && youtubeProfile && <>
         <List searchTheme={searchType} data={youtubeProfile?.data} uiType="profile" />
         <List searchTheme={searchType} data={youtubeList?.data} uiType="list" />
-      </>}
+      </>} */}
     </>
   );
 };
