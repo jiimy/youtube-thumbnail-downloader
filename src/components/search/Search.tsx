@@ -55,6 +55,7 @@ const Search = () => {
         setLink(value);
         router.push(`/search?type=thumbnail&search=${value}`);
       } else {
+        router.push(`/search?type=youtube&search=${text}`);
         setSearchType('video');
       }
       setShouldFetch(true);
@@ -92,13 +93,13 @@ const Search = () => {
         </button>
       </div>
 
-      {
+      {/* {
         (listSuccess && youtubeProfileS) &&
         <div className="relative min-h-800">
           <List searchTheme={searchType} data={youtubeProfile?.data} uiType="profile" />
           <List searchTheme={searchType} data={youtubeList?.data} uiType="list" />
         </div>
-      }
+      } */}
     </>
   );
 };

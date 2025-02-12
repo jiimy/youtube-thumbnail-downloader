@@ -79,3 +79,32 @@ export async function downloadApi(url: string, key: string) {
     alert("이미지 다운로드에 실패했습니다.");
   }
 }
+
+// 여러개 한번에 
+export async function downloadMultiApi(urls: string[], keys: string[]) {
+  console.log("urls", urls);
+  try {
+    // 각 URL에 대한 axios 요청을 생성
+    const requests = urls.map((url, index) =>
+      axios.get(`/api/thumbnail/?url=${encodeURIComponent(url)}&key=${keys[index]}`, {
+        responseType: "blob"
+      })
+    );
+
+    // 모든 요청을 병렬로 처리
+    const responses = await Promise.all(requests);
+
+    // 각 파일을 다운로드
+    responses.forEach((response, index) => {
+      const blob = response.data;
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `${keys[index]}-size.jpg`; // 각 파일마다 고유한 파일명
+      link.click();
+      URL.revokeObjectURL(link.href);
+    });
+  } catch (error) {
+    console.error("이미지 다운로드 실패:", error);
+    alert("이미지 다운로드에 실패했습니다.");
+  }
+}
