@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     const response = await axios.get(YOUTUBE_API_URL, {
       params: {
         part: "snippet",
-        maxResults: 10,
+        maxResults: 2, // api 제한있어서 갯수를 줄임.
         q: search,
         order: "date",
         key: `${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}`,
