@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import s from './search.module.scss';
-
 import Loading from "@/components/loading/Loading";
 import dynamic from "next/dynamic";
 import { downloadApi, youtubeInfoApi } from "@/api/youtube";
@@ -12,6 +11,8 @@ import axios from "axios";
 import searchIcon from '/public/image/search.svg';
 import List from "@/components/List/List";
 import { useRouter } from "next/navigation";
+import { motion, useAnimationControls } from "framer-motion";
+
 
 
 const Search = () => {
@@ -20,6 +21,9 @@ const Search = () => {
   const [link, setLink] = useState<string>("");
   const [searchType, setSearchType] = useState<'video' | 'thumbnail'>('video');
   const [shouldFetch, setShouldFetch] = useState<boolean>(false);
+
+  const [searchStart, setSearchStart] = useState(false); // searchStart - 검색시작할때. 
+  const controls = useAnimationControls();
 
   // 유튜브 검색 api
   // const { data: youtubeList, isSuccess: listSuccess, isLoading: youtubeListLoading } = useQuery({
@@ -33,6 +37,30 @@ const Search = () => {
   //   queryKey: ['youtubeProfile', text],
   //   enabled: link === '' && shouldFetch && searchType === 'video'
   // })
+
+  useEffect(() => {
+    if (searchStart) {
+      controls.start({
+        marginTop: "calc(0vh + 20px)",
+        width: "calc(100vw - 90%)",
+        height: "36px",
+        transition: {
+          duration: 0.4,
+          ease: [0, 0.55, 0.45, 1],
+        },
+      });
+    } else {
+      controls.start({
+        marginTop: "calc(50vh - 50px)",
+        width: "calc(100vw - 60%)",
+        height: "50px",
+        transition: {
+          duration: 0.4,
+          ease: [0, 0.55, 0.45, 1],
+        },
+      });
+    }
+  }, [controls, searchStart]);
 
   const onchange = (e: any) => {
     setText(e.target.value);
@@ -65,7 +93,13 @@ const Search = () => {
 
   const handleKeyDown = (e: any) => {
     if (e.key === "Enter") {
-      onEnter();
+      // onEnter();
+      if (text === '') {
+        setSearchStart(false);
+      }
+      if (text !== '') {
+        setSearchStart(true);
+      }
     }
   };
 
@@ -78,7 +112,14 @@ const Search = () => {
 
   return (
     <>
-      <div className={s.input_wrap}>
+      {/* <motion.h1 animate={controls}>{searchStart ? "Wow!" : "..."}</motion.h1> */}
+      <motion.div className={s.input_wrap} animate={controls}
+        initial={{
+          marginTop: "calc(50vh - 50px)",
+          width: "calc(100vw - 60%)",
+          height: "50px",
+        }}
+      >
         <input
           type="text"
           name=""
@@ -92,7 +133,7 @@ const Search = () => {
         <button onClick={onEnter}>
           <Image src={searchIcon} alt={'검색'} width={36} height={36} />
         </button>
-      </div>
+      </motion.div>
 
       {/* {
         (listSuccess && youtubeProfileS) &&
