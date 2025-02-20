@@ -41,25 +41,25 @@ const Search = () => {
     enabled: type === 'video' && search !== ''
   })
 
-  // const { data: youtubeProfile, isSuccess: youtubeProfileS, isLoading: youtubeProfileLoading } = useQuery({
-  //   queryFn: () => youtubeSearchProfileApi(link),
-  //   queryKey: ['youtubeProfile', link],
-  //   enabled: type === 'video' && search !== ''
-  // })
+  const { data: youtubeProfile, isSuccess: youtubeProfileS, isLoading: youtubeProfileLoading } = useQuery({
+    queryFn: () => youtubeSearchProfileApi(link),
+    queryKey: ['youtubeProfile', link],
+    enabled: type === 'video' && search !== ''
+  })
 
-  console.log('dd', link);
+  console.log('dd', link, youtubeInfo);
   // console.log('dd', type, search);
   // console.log('dd', link);
 
   return (
     <>
-      {/* {youtubeInfo &&
+      {youtubeInfo &&
         <List searchTheme={searchType} data={youtubeInfo} uiType="list" />
       }
       {youtubeList && youtubeProfile && <>
         <List searchTheme={searchType} data={youtubeProfile?.data} uiType="profile" />
         <List searchTheme={searchType} data={youtubeList?.data} uiType="list" />
-      </>} */}
+      </>}
     </>
   );
 };
