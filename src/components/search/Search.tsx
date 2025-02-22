@@ -49,7 +49,7 @@ const Search = () => {
         },
       });
     }
-  }, [controls, searchStart, type]); 
+  }, [controls, searchStart, type]);
 
   useEffect(() => {
     if (ref.current) {
@@ -66,10 +66,12 @@ const Search = () => {
     if (text) {
       if (text.includes('youtu.be')) {
         const value = text.split('youtu.be/')[1].split('?si')[0];
-        router.push(`/search?type=thumbnail&search=${value}`);
+        // router.push(`/search?type=thumbnail&search=${value}`);
+        router.push(`/search/thumbnail/${value}`);
       } else if (text.includes('youtube')) {
         const value = text.split('watch?v=')[1];
-        router.push(`/search?type=thumbnail&search=${value}`);
+        // router.push(`/search?type=thumbnail&search=${value}`);
+        router.push(`/search/thumbnail/${value}`);
       } else {
         router.push(`/search?type=video&search=${text}`);
         setSearchType('video');

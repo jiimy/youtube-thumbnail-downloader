@@ -3,5 +3,5 @@ export default function InterceptedModalPhotoId({
 }: {
   params: { id: string };
 }) {
-  return <h1>Intercepted Photo Id {params.id}</h1>;
+  return <h1>Intercepted photo/@modal/(..)photo/[id]/page {params.id}</h1>;
 }
