@@ -73,7 +73,8 @@ const Search = () => {
         // router.push(`/search?type=thumbnail&search=${value}`);
         router.push(`/search/thumbnail/${value}`);
       } else {
-        router.push(`/search?type=video&search=${text}`);
+        // router.push(`/search?type=video&search=${text}`);
+        router.push(`/search/video/${text}`);
         setSearchType('video');
       }
     }

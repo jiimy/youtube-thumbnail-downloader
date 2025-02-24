@@ -7,7 +7,7 @@ const page = ({ params }: { params: { link: string } }) => {
   return (
     <div>
       {/* <ListThumbnail link={params.link} /> */}
-      <ListSearch link={params.link} type='thumbnail' />
+      <ListSearch link={params.link} type='video' />
     </div>
   );
 };
