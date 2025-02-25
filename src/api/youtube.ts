@@ -62,9 +62,10 @@ export async function fetchVideoInfo(id: string) {
 // 유튜브 검색 api
 export async function youtubeSearchApi(query: string) {
   console.log("query:", query);
-  const te1 = '형독';
+  // const te1 = '형독';
   try {
-    const res = await axios.get(`/api/search/?search=${te1}`);
+    // const res = await axios.get(`/api/search/?search=${te1}`);
+    const res = await axios.get(`/api/search/?search=${query}`);
     if (res.status === 200) {
       console.log('api', query, res);
       return res?.data;

@@ -1,3 +1,4 @@
+'use client';
 import { downloadApi, downloadMultiApi, youtubeInfoApi, youtubeSearchApi, youtubeSearchProfileApi } from '@/api/youtube';
 import Image from 'next/image';
 import React from 'react';
@@ -5,20 +6,24 @@ import s from './list.module.scss';
 import YoutubeItem from './YoutubeItem';
 import Loading from '../loading/Loading';
 import { useQuery } from '@tanstack/react-query';
+import { useSearchParams } from 'next/navigation';
 // 검색 유형 = '동영상 검색', | '썸네일 검색'에따라 리스트의 ui가 달라짐.
 
 type ListProps = {
   link: string;
-  type: 'video' | 'thumbnail'
+  modalLink?: string;
 }
 
-const ListSearch = ({ link, type }: ListProps) => {
+const ListSearch = ({ link, modalLink }: ListProps) => {
+  const params = useSearchParams();
+  const type = params.get('type');
 
+  console.log('cc', type, link);
 
   const { data, isLoading: youtubeInfoLoading } = useQuery({
     queryFn: () => youtubeInfoApi(link),
     queryKey: ["youtubeLink", link],
-    enabled: Boolean(link) && type === 'thumbnail'
+    enabled: Boolean(link) && type === 'thumbnail' || Boolean(modalLink)
   });
 
   // 유튜브 검색 api
@@ -36,6 +41,7 @@ const ListSearch = ({ link, type }: ListProps) => {
 
   return (
     <div>
+      {(youtubeInfoLoading || youtubeListLoading || youtubeProfileLoading) && <Loading />}
       {listSuccess && youtubeProfileS &&
         <>
           <div className={s.title}>

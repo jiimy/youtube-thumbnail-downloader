@@ -2,12 +2,12 @@ import ListSearch from '@/components/List/ListSearch';
 import ListThumbnail from '@/components/List/ListThumbnail';
 import React from 'react';
 
-const page = ({ params }: { params: { link: string } }) => {
+const page = ({ params }: { params: { id: string } }) => {
 
   return (
     <div>
-      {/* <ListThumbnail link={params.link} /> */}
-      <ListSearch link={params.link} type='video' />
+      {/* <ListThumbnail link={params.id} /> */}
+      <ListSearch link={params.id} />
     </div>
   );
 };

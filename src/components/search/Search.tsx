@@ -16,7 +16,8 @@ const Search = () => {
   const [link, setLink] = useState<string>("");
   const [searchType, setSearchType] = useState<'video' | 'thumbnail'>('video');
   const [searchStart, setSearchStart] = useState(false); // searchStart - 검색시작할때. 
-  const controls = useAnimationControls();
+  const controlsDiv = useAnimationControls();
+  const controlsInput = useAnimationControls();
 
   // 공통 스타일을 변수로 빼기
   const startStyle = {
@@ -30,26 +31,39 @@ const Search = () => {
     height: "50px",
   };
 
+  const startStyleInput = {
+    padding: "0 10px"
+  };
+  const endStyleInput = {
+    padding: "0 20px",
+  };
+
   useEffect(() => {
     // 쿼리 파람즈에 따른 스타일 처리
     if (type === 'thumbnail' || searchStart) {
-      controls.start({
+      controlsDiv.start({
         ...startStyle,
         transition: {
           duration: 0.4,
           ease: [0, 0.55, 0.45, 1],
         },
       });
+      controlsInput.start({
+        ...startStyleInput,
+      });
     } else {
-      controls.start({
+      controlsDiv.start({
         ...endStyle,
         transition: {
           duration: 0.4,
           ease: [0, 0.55, 0.45, 1],
         },
       });
+      controlsInput.start({
+        ...endStyleInput,
+      });
     }
-  }, [controls, searchStart, type]);
+  }, [controlsDiv, searchStart, type]);
 
   useEffect(() => {
     if (ref.current) {
@@ -67,14 +81,17 @@ const Search = () => {
       if (text.includes('youtu.be')) {
         const value = text.split('youtu.be/')[1].split('?si')[0];
         // router.push(`/search?type=thumbnail&search=${value}`);
-        router.push(`/search/thumbnail/${value}`);
+        // router.push(`/search/thumbnail/${value}`);
+        router.push(`/results?type=thumbnail&search_query=${value}`);
       } else if (text.includes('youtube')) {
         const value = text.split('watch?v=')[1];
         // router.push(`/search?type=thumbnail&search=${value}`);
-        router.push(`/search/thumbnail/${value}`);
+        router.push(`/results?type=thumbnail&search_query=${value}`);
+        // router.push(`/search/thumbnail/${value}`);
       } else {
         // router.push(`/search?type=video&search=${text}`);
-        router.push(`/search/video/${text}`);
+        // router.push(`/search/video/${text}`);
+        router.push(`/results?type=video&search_query=${text}`);
         setSearchType('video');
       }
     }
@@ -94,10 +111,10 @@ const Search = () => {
 
   return (
     <>
-      <motion.div className={s.input_wrap} animate={controls}
+      <motion.div className={s.input_wrap} animate={controlsDiv}
         initial={endStyle} // initial 스타일 추가
       >
-        <input
+        <motion.input
           ref={ref}
           type="text"
           name=""
@@ -107,6 +124,7 @@ const Search = () => {
           value={text}
           onChange={onchange}
           onKeyDown={handleKeyDown}
+          animate={controlsInput}
         />
         <button onClick={onEnter}>
           <Image src={searchIcon} alt={'검색'} width={36} height={36} />
