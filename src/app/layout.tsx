@@ -4,6 +4,8 @@ import Head from './head'
 import QueryProviders from '@/provider/queryProvider';
 import Script from 'next/script';
 import Search from '@/components/search/Search';
+import { Suspense } from 'react';
+import Loading from '@/components/loading/Loading';
 
 export default function RootLayout({
   children
@@ -16,8 +18,10 @@ export default function RootLayout({
       <body>
         <QueryProviders>
           <div className="page">
-            <Search />
-            {children}
+            <Suspense fallback={<Loading />}>
+              <Search />
+              {children}
+            </Suspense>
           </div>
         </QueryProviders>
         <div id="modal" />
