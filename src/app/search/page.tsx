@@ -2,10 +2,11 @@
 
 import { youtubeInfoApi, youtubeSearchApi, youtubeSearchProfileApi } from '@/api/youtube';
 import List from '@/components/List/List';
+import Loading from '@/components/loading/Loading';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 
 const Search = () => {
   const params = useSearchParams();
@@ -52,7 +53,7 @@ const Search = () => {
   // console.log('dd', link);
 
   return (
-    <>
+    <Suspense fallback={<Loading />}>
       {youtubeInfo &&
         <List searchTheme={searchType} data={youtubeInfo} uiType="list" />
       }
@@ -60,7 +61,7 @@ const Search = () => {
         <List searchTheme={searchType} data={youtubeProfile?.data} uiType="profile" />
         <List searchTheme={searchType} data={youtubeList?.data} uiType="list" />
       </>}
-    </>
+    </Suspense>
   );
 };
 
