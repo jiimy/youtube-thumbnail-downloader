@@ -8,7 +8,9 @@ export default function RootLayout({
 }) {
   return (
     <>
-      {children}
+      <Suspense fallback={<Loading />}>
+        {children}
+      </Suspense>
     </>
   )
 }
